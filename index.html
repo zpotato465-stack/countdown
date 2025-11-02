@@ -1,80 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GREAT MEME RESET COUNTDOWN</title>
+  <title>Great Meme Reset Countdown</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
       background: black;
       color: white;
       font-family: Arial, sans-serif;
       text-align: center;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
-
     #title {
-      font-size: 50px;
+      font-size: 48px;
       font-weight: bold;
-      text-shadow: 0 0 25px #ff00ff;
-      margin-top: 30px;
+      text-shadow: 0 0 20px #ff00ff;
+      margin-top: 50px;
       position: relative;
       z-index: 10;
     }
-
     #timer {
-      font-size: 70px;
+      font-size: 64px;
       font-weight: bold;
-      text-shadow: 0 0 25px #00eaff;
-      margin-bottom: 50px;
+      text-shadow: 0 0 20px #00eaff;
       position: relative;
       z-index: 10;
     }
-
-    /* Container for Nyan Cat + Rainbow */
     .nyan-container {
       position: absolute;
-      top: 40%;
-      left: -400px;
-      width: 400px;
-      height: 100px;
-      animation: fly 8s linear infinite;
+      top: 45%;
+      left: -300px;
+      width: 300px;
+      height: 150px;
+      animation: fly 10s linear infinite;
     }
-
-    /* Rainbow trail behind Nyan Cat */
-    .rainbow {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 400px;
-      height: 20px;
-      transform: translateY(-50%);
-      display: flex;
-    }
-
-    .stripe {
-      flex: 1;
-      height: 100%;
-    }
-
-    .red { background: red; }
-    .orange { background: orange; }
-    .yellow { background: yellow; }
-    .green { background: green; }
-    .blue { background: blue; }
-    .indigo { background: indigo; }
-    .violet { background: violet; }
-
-    .nyan-cat {
-      position: absolute;
-      width: 100px;
-      height: auto;
-      z-index: 10;
-    }
-
     @keyframes fly {
       0% { left: -400px; }
       100% { left: 110%; }
+    }
+    .nyan-cat {
+      width: 300px;
+      height: auto;
+      z-index: 5;
     }
   </style>
 </head>
@@ -84,39 +52,32 @@
   <div id="timer"></div>
 
   <div class="nyan-container">
-    <div class="rainbow">
-      <div class="stripe red"></div>
-      <div class="stripe orange"></div>
-      <div class="stripe yellow"></div>
-      <div class="stripe green"></div>
-      <div class="stripe blue"></div>
-      <div class="stripe indigo"></div>
-      <div class="stripe violet"></div>
-    </div>
-    <img class="nyan-cat" src="https://upload.wikimedia.org/wikipedia/en/4/45/Nyan_cat_250px_frame.png" alt="Nyan Cat">
+    <img class="nyan-cat"
+         src="https://pngkey.com/png/full/811-8116317_nyan-cat-png.png"
+         alt="Nyan Cat">
   </div>
 
-<script>
-  const resetDate = new Date("January 1, 2026 00:00:00").getTime();
+  <script>
+    const resetDate = new Date("January 1, 2026 00:00:00").getTime();
 
-  setInterval(() => {
-    const now = Date.now();
-    const diff = resetDate - now;
+    setInterval(() => {
+      const now = Date.now();
+      const diff = resetDate - now;
 
-    if (diff <= 0) {
-      document.getElementById("timer").innerHTML = "INITIATING...";
-      return;
-    }
+      if (diff <= 0) {
+        document.getElementById("timer").innerHTML = "INITIATING...";
+        return;
+      }
 
-    const days    = Math.floor(diff/(1000*60*60*24));
-    const hours   = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
-    const minutes = Math.floor((diff % (1000*60*60))/(1000*60));
-    const seconds = Math.floor((diff % (1000*60))/1000);
+      const days    = Math.floor(diff/(1000*60*60*24));
+      const hours   = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
+      const minutes = Math.floor((diff % (1000*60*60))/(1000*60));
+      const seconds = Math.floor((diff % (1000*60))/1000);
 
-    document.getElementById("timer").innerHTML =
-      `${days}D ${hours}H ${minutes}M ${seconds}S`;
-  }, 1000);
-</script>
+      document.getElementById("timer").innerHTML =
+        `${days}D ${hours}H ${minutes}M ${seconds}S`;
+    }, 1000);
+  </script>
 
 </body>
 </html>
