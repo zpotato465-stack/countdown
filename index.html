@@ -57,9 +57,6 @@
          alt="Nyan Cat">
   </div>
 
-  <!-- 🔊 LMS THEME AUDIO (ADDED ONLY) -->
-  <audio id="lmsMusic" src="lms-theme.mp3" preload="auto"></audio>
-
   <script>
     const resetDate = new Date("January 1, 2026 00:00:00").getTime();
 
@@ -80,31 +77,6 @@
       document.getElementById("timer").innerHTML =
         `${days}D ${hours}H ${minutes}M ${seconds}S`;
     }, 1000);
-  </script>
-
-  <!-- 🎵 LMS MUSIC TRIGGER SCRIPT (ADDED ONLY) -->
-  <script>
-    const lmsMusic = document.getElementById("lmsMusic");
-    let audioUnlocked = false;
-    let musicStarted = false;
-
-    // Unlock audio on first user interaction
-    document.addEventListener("click", () => {
-      audioUnlocked = true;
-    }, { once: true });
-
-    // Watch time without touching original countdown
-    setInterval(() => {
-      if (!audioUnlocked || musicStarted) return;
-
-      const diff = resetDate - Date.now();
-
-      // ▶️ Play LMS theme at 1:30 remaining (90 seconds)
-      if (diff <= 90000 && diff > 0) {
-        lmsMusic.play().catch(() => {});
-        musicStarted = true;
-      }
-    }, 500);
   </script>
 
 </body>
