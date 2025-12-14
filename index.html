@@ -1,29 +1,111 @@
-<script>
-  const lmsMusic = document.getElementById("lmsMusic");
-  let audioUnlocked = false;
-  let musicStarted = false;
-
-  // Unlock audio on first user interaction
-  document.addEventListener("click", () => {
-    audioUnlocked = true;
-  }, { once: true });
-
-  // Play music exactly at 1:30 remaining
-  setInterval(() => {
-    if (!audioUnlocked || musicStarted) return;
-
-    const now = Date.now();
-    const diff = resetDate - now;
-
-    if (diff <= 0) return; // countdown finished, do nothing
-
-    const minutes = Math.floor((diff % (1000*60*60))/(1000*60));
-    const seconds = Math.floor((diff % (1000*60))/1000);
-
-    // Check exact 1:30
-    if (minutes === 1 && seconds === 30) {
-      lmsMusic.play().catch(() => {});
-      musicStarted = true;
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Great Meme Reset Countdown</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
-  }, 200);
-</script>
+    #title {
+      font-size: 48px;
+      font-weight: bold;
+      text-shadow: 0 0 20px #ff00ff;
+      margin-top: 50px;
+      position: relative;
+      z-index: 10;
+    }
+    #timer {
+      font-size: 64px;
+      font-weight: bold;
+      text-shadow: 0 0 20px #00eaff;
+      position: relative;
+      z-index: 10;
+    }
+    .nyan-container {
+      position: absolute;
+      top: 45%;
+      left: -300px;
+      width: 300px;
+      height: 150px;
+      animation: fly 10s linear infinite;
+    }
+    @keyframes fly {
+      0% { left: -400px; }
+      100% { left: 110%; }
+    }
+    .nyan-cat {
+      width: 300px;
+      height: auto;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="title">GREAT MEME RESET IMMINENT IN:</div>
+  <div id="timer"></div>
+
+  <div class="nyan-container">
+    <img class="nyan-cat"
+         src="https://pngkey.com/png/full/811-8116317_nyan-cat-png.png"
+         alt="Nyan Cat">
+  </div>
+
+  <!-- 🔊 LMS THEME AUDIO (ADDED ONLY) -->
+  <audio id="lmsMusic" src="lms-theme.mp3" preload="auto"></audio>
+
+  <script>
+    const resetDate = new Date("January 1, 2026 00:00:00").getTime();
+
+    setInterval(() => {
+      const now = Date.now();
+      const diff = resetDate - now;
+
+      if (diff <= 0) {
+        document.getElementById("timer").innerHTML = "INITIATING...";
+        return;
+      }
+
+      const days    = Math.floor(diff/(1000*60*60*24));
+      const hours   = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
+      const minutes = Math.floor((diff % (1000*60*60))/(1000*60));
+      const seconds = Math.floor((diff % (1000*60))/1000);
+
+      document.getElementById("timer").innerHTML =
+        `${days}D ${hours}H ${minutes}M ${seconds}S`;
+    }, 1000);
+  </script>
+
+  <!-- 🎵 LMS MUSIC TRIGGER SCRIPT (ADDED ONLY) -->
+  <script>
+    const lmsMusic = document.getElementById("lmsMusic");
+    let audioUnlocked = false;
+    let musicStarted = false;
+
+    // Unlock audio on first user interaction
+    document.addEventListener("click", () => {
+      audioUnlocked = true;
+    }, { once: true });
+
+    // Watch time without touching original countdown
+    setInterval(() => {
+      if (!audioUnlocked || musicStarted) return;
+
+      const diff = resetDate - Date.now();
+
+      // ▶️ Play LMS theme at 1:30 remaining (90 seconds)
+      if (diff <= 90000 && diff > 0) {
+        lmsMusic.play().catch(() => {});
+        musicStarted = true;
+      }
+    }, 500);
+  </script>
+
+</body>
+</html>
