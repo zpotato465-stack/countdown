@@ -44,40 +44,154 @@
       height: auto;
       z-index: 5;
     }
+
+    /* Admin panel */
+    #adminPanel {
+      display: none;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px;
+      border: 2px solid #00eaff;
+      z-index: 1000;
+    }
+    #adminPanel input {
+      width: 180px;
+      padding: 5px;
+    }
+    #adminPanel button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
-  <div id="title">GREAT MEME RESET IMMINENT IN:</div>
-  <div id="timer"></div>
+<div id="title">GREAT MEME RESET IMMINENT IN:</div>
+<div id="timer"></div>
 
-  <div class="nyan-container">
-    <img class="nyan-cat"
-         src="https://pngkey.com/png/full/811-8116317_nyan-cat-png.png"
-         alt="Nyan Cat">
-  </div>
+<div class="nyan-container">
+  <img class="nyan-cat" src="https://pngkey.com/png/full/811-8116317_nyan-cat-png.png" alt="Nyan Cat">
+</div>
 
-  <script>
-    const resetDate = new Date("January 1, 2026 00:00:00").getTime();
+<!-- LMS Music -->
+<audio id="lmsMusic" src="lms-theme.mp3" preload="auto"></audio>
 
-    setInterval(() => {
-      const now = Date.now();
-      const diff = resetDate - now;
+<!-- Admin Panel -->
+<div id="adminPanel">
+  <input type="text" id="adminMessage" placeholder="Type message">
+  <button id="sendMsgBtn">Send</button>
+</div>
 
-      if (diff <= 0) {
-        document.getElementById("timer").innerHTML = "INITIATING...";
-        return;
-      }
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-      const days    = Math.floor(diff/(1000*60*60*24));
-      const hours   = Math.floor((diff % (1000*60*60*24))/(1000*60*60));
-      const minutes = Math.floor((diff % (1000*60*60))/(1000*60));
-      const seconds = Math.floor((diff % (1000*60))/1000);
+<script>
+  // ===== Firebase Config =====
+  const firebaseConfig = {
 
-      document.getElementById("timer").innerHTML =
-        `${days}D ${hours}H ${minutes}M ${seconds}S`;
-    }, 1000);
-  </script>
+  apiKey: "AIzaSyAtcZOO2whLXKD1sF4UcWuywOe6LaCZiM8",
+
+  authDomain: "countdown-d0570.firebaseapp.com",
+
+  projectId: "countdown-d0570",
+
+  storageBucket: "countdown-d0570.firebasestorage.app",
+
+  messagingSenderId: "507083550464",
+
+  appId: "1:507083550464:web:bcbbc480e0744e917d8de5",
+
+  measurementId: "G-5504DVFJTG"
+
+};
+
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
+
+<script>
+  // ===== Countdown =====
+  const timerEl = document.getElementById("timer");
+  const resetDate = new Date("January 1, 2026 00:00:00").getTime();
+  const lmsMusic = document.getElementById("lmsMusic");
+  let musicStarted = false;
+
+  function updateCountdown() {
+    const now = Date.now();
+    const diff = resetDate - now;
+
+    if (diff <= 0) {
+      timerEl.innerHTML = "INITIATING...";
+      clearInterval(interval);
+      return;
+    }
+
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+    const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+    const seconds = Math.floor((diff % (1000*60)) / 1000);
+
+    timerEl.innerHTML = `${days}D ${hours}H ${minutes}M ${seconds}S`;
+
+    // Play LMS music at exactly 1:30 remaining
+    if (!musicStarted && minutes === 1 && seconds === 30) {
+      lmsMusic.play().catch(()=>{});
+      musicStarted = true;
+    }
+  }
+
+  const interval = setInterval(updateCountdown, 1000);
+
+  // Unlock audio on first click
+  document.addEventListener("click", () => { lmsMusic.play().catch(()=>{}); }, {once:true});
+</script>
+
+<script>
+  // ===== Global Admin Panel =====
+  const adminPanel = document.getElementById("adminPanel");
+  const sendBtn = document.getElementById("sendMsgBtn");
+  const msgInput = document.getElementById("adminMessage");
+  const adminPassword = "supersecret"; // change your password
+
+  // Password prompt
+  if (prompt("Enter admin password:") === adminPassword) {
+    adminPanel.style.display = "block";
+  } else {
+    alert("Wrong password! Admin panel locked.");
+  }
+
+  // Send message to Firebase
+  sendBtn.onclick = () => {
+    const msg = msgInput.value.trim();
+    if (!msg) return;
+    db.ref('messages').push({ text: msg, timestamp: Date.now() });
+    msgInput.value = "";
+  };
+
+  // Listen for messages globally
+  db.ref('messages').on('child_added', snapshot => {
+    const msg = snapshot.val().text;
+    const div = document.createElement('div');
+    div.style.position = 'fixed';
+    div.style.top = '50px';
+    div.style.left = '50%';
+    div.style.transform = 'translateX(-50%)';
+    div.style.background = 'rgba(255,0,0,0.8)';
+    div.style.color = 'white';
+    div.style.padding = '10px 20px';
+    div.style.fontSize = '24px';
+    div.style.borderRadius = '10px';
+    div.style.zIndex = 999;
+    div.innerText = msg;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 5000);
+  });
+</script>
 
 </body>
 </html>
