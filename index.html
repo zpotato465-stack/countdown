@@ -47,9 +47,9 @@
 
     /* Admin panel */
     #adminPanel {
-      display: none;
+      display: none; /* hidden by default */
       position: fixed;
-      top: 10px;
+      top: 50px;
       right: 10px;
       background: rgba(0,0,0,0.8);
       color: white;
@@ -65,6 +65,20 @@
       padding: 5px 10px;
       cursor: pointer;
     }
+
+    /* Admin button */
+    #adminBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      padding: 5px 10px;
+      cursor: pointer;
+      background: #00eaff;
+      border: none;
+      font-weight: bold;
+      color: black;
+    }
   </style>
 </head>
 <body>
@@ -79,7 +93,10 @@
 <!-- LMS Music -->
 <audio id="lmsMusic" src="lms-theme.mp3" preload="auto"></audio>
 
-<!-- Admin Panel -->
+<!-- Admin button -->
+<button id="adminBtn">Admin</button>
+
+<!-- Admin panel -->
 <div id="adminPanel">
   <input type="text" id="adminMessage" placeholder="Type message">
   <button id="sendMsgBtn">Send</button>
@@ -152,18 +169,22 @@
 </script>
 
 <script>
-  // ===== Global Admin Panel =====
+  // ===== Admin Button and Panel =====
+  const adminBtn = document.getElementById("adminBtn");
   const adminPanel = document.getElementById("adminPanel");
   const sendBtn = document.getElementById("sendMsgBtn");
   const msgInput = document.getElementById("adminMessage");
-  const adminPassword = "supersecret"; // change your password
+  const adminPassword = "supersecret"; // change this
 
-  // Password prompt
-  if (prompt("Enter admin password:") === adminPassword) {
-    adminPanel.style.display = "block";
-  } else {
-    alert("Wrong password! Admin panel locked.");
-  }
+  adminBtn.onclick = () => {
+    const password = prompt("Enter admin password:");
+    if(password === adminPassword) {
+      adminPanel.style.display = "block";
+      alert("Admin panel unlocked!");
+    } else {
+      alert("Wrong password!");
+    }
+  };
 
   // Send message to Firebase
   sendBtn.onclick = () => {
